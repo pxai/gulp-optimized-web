@@ -4,7 +4,9 @@ var concat = require('gulp-concat');
 var cssnano = require('gulp-cssnano');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var useref = require('gulp-useref');
 var browserSync = require('browser-sync');
+var del = require('del');
 
 gulp.task('say_hello', function() {
 	console.log('Gulp says hello');
@@ -30,11 +32,11 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
+// Concat & Minify CSS
 gulp.task('cssnano', function () {
   return gulp.src('src/css/*.css')
-    .pipe(concat('all.css'))
     .pipe(cssnano())
-    .pipe(rename('all.min.css'))
+    .pipe(concat('all.min.css'))
     .pipe(gulp.dest('dist/css'));
 //    .pipe(notify({ message: 'CSS minification completed' }));
 });
@@ -42,19 +44,32 @@ gulp.task('cssnano', function () {
 // Concat & Minify JS
 gulp.task('minify', function(){
   return gulp.src('src/js/*.js')
-    .pipe(concat('all.js'))
-    .pipe(gulp.dest('dist/js'))
-    .pipe(rename('all.min.js'))
+    .pipe(concat('all.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('dist/js'));
+    .pipe(gulp.dest('dist/js'))
+});
+
+gulp.task('useref', function(){
+  return gulp.src('src/*.html')
+    .pipe(useref())
+    .pipe(gulp.dest('dist'))
 });
 
 // Watch Our Files
-gulp.task('watch', ['browserSync','minify','cssnano'],function() {
-  gulp.watch('src/**/*', ['minify']);
+gulp.task('watch',['minify','cssnano','browserSync'],function() {
+  gulp.start('useref');
+  
+  // and now my watch begins...
+  gulp.watch('src/js/*.js', ['minify']);
+  gulp.watch('src/css/*.css', ['cssnano',]);
+  gulp.watch('src/index.html', ['useref']);
+});
+
+gulp.task('clean', function() {
+  return del(['dist/js/*.js', 'dist/css/*.css', 'dist/*.html']);
 });
 
 // Default
 gulp.task('move',['just_move']);
-gulp.task('default', ['minify', 'watch']);
 gulp.task('greet',['say_hello']);
+gulp.task('default', ['clean','watch']);

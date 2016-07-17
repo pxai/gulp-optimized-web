@@ -3,6 +3,9 @@
 * Custom JavaScript files
 */
 var Greeter = function () {
-console.log('ok, greeting ready');
+	var greet = function () { 
+		console.log('ok, greeting is ready');
+	};
+	//
 };
 
