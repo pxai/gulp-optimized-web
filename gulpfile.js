@@ -34,7 +34,7 @@ gulp.task('lint', function() {
 
 // Concat & Minify CSS
 gulp.task('cssnano', function () {
-  return gulp.src('src/css/*.css')
+   return gulp.src('src/css/*.css')
     .pipe(cssnano())
     .pipe(concat('all.min.css'))
     .pipe(gulp.dest('dist/css'));
@@ -56,12 +56,10 @@ gulp.task('useref', function(){
 });
 
 // Watch Our Files
-gulp.task('watch',['minify','cssnano','browserSync'],function() {
-  gulp.start('useref');
-  
+gulp.task('watch',function() {
   // and now my watch begins...
   gulp.watch('src/js/*.js', ['minify']);
-  gulp.watch('src/css/*.css', ['cssnano',]);
+  gulp.watch('src/css/*.css', ['cssnano']);
   gulp.watch('src/index.html', ['useref']);
 });
 
@@ -72,4 +70,4 @@ gulp.task('clean', function() {
 // Default
 gulp.task('move',['just_move']);
 gulp.task('greet',['say_hello']);
-gulp.task('default', ['clean','watch']);
+gulp.task('default', ['useref','clean','minify','cssnano','browserSync','watch']);
