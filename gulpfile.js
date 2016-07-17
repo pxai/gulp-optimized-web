@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 //var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
+var cssnano = require('gulp-cssnano');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync');
@@ -29,6 +30,15 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
+gulp.task('cssnano', function () {
+  return gulp.src('src/css/*.css')
+    .pipe(concat('all.css'))
+    .pipe(cssnano())
+    .pipe(rename('all.min.css'))
+    .pipe(gulp.dest('dist/css'));
+//    .pipe(notify({ message: 'CSS minification completed' }));
+});
+
 // Concat & Minify JS
 gulp.task('minify', function(){
   return gulp.src('src/js/*.js')
@@ -40,8 +50,7 @@ gulp.task('minify', function(){
 });
 
 // Watch Our Files
-gulp.task('watch', ['browserSync','minify'],function() {
-  //gulp.watch('src/*.js', ['lint', 'minify']);
+gulp.task('watch', ['browserSync','minify','cssnano'],function() {
   gulp.watch('src/**/*', ['minify']);
 });
 
