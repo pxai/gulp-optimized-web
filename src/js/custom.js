@@ -8,4 +8,9 @@ var Greeter = function () {
 	};
 };
 
-//
+$(document).ready(function () {
+	$('#fire').click(function (e) {
+		console.log('Button clicked');
+		$('#myModal').modal('show');
+	});
+});

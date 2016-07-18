@@ -33,6 +33,12 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
+// Move fonts dir
+gulp.task('movefonts', function () {
+  return gulp.src('src/fonts/*.*')
+    .pipe(gulp.dest('dist/fonts'));
+});
+
 // Concat & Minify CSS
 gulp.task('minifycss', function () {
    return gulp.src('src/css/*.css')
@@ -45,7 +51,7 @@ gulp.task('minifycss', function () {
 
 // Concat & Minify JS
 gulp.task('minifyjs', function(){
-  return gulp.src('src/js/*.js')
+  return gulp.src(['src/js/jquery.js','src/js/modal.js','src/js/custom.js'])
     .pipe(concat('all.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('dist/js'));
@@ -67,12 +73,13 @@ gulp.task('watch',function() {
   gulp.watch('src/index.html', ['minifyhtml']);
 });
 
+// Clean dist files
 gulp.task('clean', function() {
-  return del(['dist/js/*.js', 'dist/css/*.css', 'dist/*.html']);
+  return del(['dist/**/*']);
 });
 
 // Default
-gulp.task('default', ['clean','minifyjs','minifycss','minifyhtml','browserSync','watch']);
+gulp.task('default', ['clean','movefonts','minifyjs','minifycss','minifyhtml','browserSync','watch']);
 // Just move files
 gulp.task('move',['just_move']);
 // Simple task
