@@ -33,20 +33,21 @@ gulp.task('lint', function() {
 });
 
 // Concat & Minify CSS
-gulp.task('cssnano', function () {
+gulp.task('minifycss', function () {
    return gulp.src('src/css/*.css')
-    .pipe(cssnano())
     .pipe(concat('all.min.css'))
+    .pipe(gulp.dest('dist/css'))
+    .pipe(cssnano())
     .pipe(gulp.dest('dist/css'));
 //    .pipe(notify({ message: 'CSS minification completed' }));
 });
 
 // Concat & Minify JS
-gulp.task('minify', function(){
+gulp.task('minifyjs', function(){
   return gulp.src('src/js/*.js')
     .pipe(concat('all.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('dist/js'))
+    .pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('useref', function(){
@@ -58,8 +59,8 @@ gulp.task('useref', function(){
 // Watch Our Files
 gulp.task('watch',function() {
   // and now my watch begins...
-  gulp.watch('src/js/*.js', ['minify']);
-  gulp.watch('src/css/*.css', ['cssnano']);
+  gulp.watch('src/js/*.js', ['minifyjs']);
+  gulp.watch('src/css/*.css', ['minifycss']);
   gulp.watch('src/index.html', ['useref']);
 });
 
@@ -70,4 +71,4 @@ gulp.task('clean', function() {
 // Default
 gulp.task('move',['just_move']);
 gulp.task('greet',['say_hello']);
-gulp.task('default', ['useref','clean','minify','cssnano','browserSync','watch']);
+gulp.task('default', ['clean','minifyjs','minifycss','useref','browserSync','watch']);
