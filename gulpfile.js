@@ -5,6 +5,7 @@ var cssnano = require('gulp-cssnano');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var useref = require('gulp-useref');
+var htmlmin = require('gulp-htmlmin');
 var browserSync = require('browser-sync');
 var del = require('del');
 
@@ -50,9 +51,11 @@ gulp.task('minifyjs', function(){
     .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('useref', function(){
+// Useref & Minify HTML
+gulp.task('minifyhtml', function(){
   return gulp.src('src/*.html')
-    .pipe(useref())
+    .pipe(useref({noAssets: true}))
+    .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest('dist'))
 });
 
@@ -61,7 +64,7 @@ gulp.task('watch',function() {
   // and now my watch begins...
   gulp.watch('src/js/*.js', ['minifyjs']);
   gulp.watch('src/css/*.css', ['minifycss']);
-  gulp.watch('src/index.html', ['useref']);
+  gulp.watch('src/index.html', ['minifyhtml']);
 });
 
 gulp.task('clean', function() {
@@ -69,6 +72,8 @@ gulp.task('clean', function() {
 });
 
 // Default
+gulp.task('default', ['clean','minifyjs','minifycss','minifyhtml','browserSync','watch']);
+// Just move files
 gulp.task('move',['just_move']);
+// Simple task
 gulp.task('greet',['say_hello']);
-gulp.task('default', ['clean','minifyjs','minifycss','useref','browserSync','watch']);
