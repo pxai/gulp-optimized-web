@@ -43,9 +43,9 @@ gulp.task('movefonts', function () {
 gulp.task('minifycss', function () {
    return gulp.src('src/css/*.css')
     .pipe(concat('all.min.css'))
-    .pipe(gulp.dest('dist/css'))
     .pipe(cssnano())
-    .pipe(gulp.dest('dist/css'));
+    .pipe(gulp.dest('dist/css'))
+    .pipe(browserSync.reload({stream:true}));
 //    .pipe(notify({ message: 'CSS minification completed' }));
 });
 
@@ -54,7 +54,8 @@ gulp.task('minifyjs', function(){
   return gulp.src(['src/js/jquery.js','src/js/modal.js','src/js/custom.js'])
     .pipe(concat('all.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('dist/js'));
+    .pipe(gulp.dest('dist/js'))
+    .pipe(browserSync.reload({stream:true}));
 });
 
 // Useref & Minify HTML
@@ -63,6 +64,7 @@ gulp.task('minifyhtml', function(){
     .pipe(useref({noAssets: true}))
     .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest('dist'))
+    .pipe(browserSync.reload({stream:true}));
 });
 
 // Watch Our Files
